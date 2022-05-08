@@ -10,9 +10,10 @@ class Order extends Model
     public function cart(){
         return $this->hasMany(Cart::class);
     }
-    public static function getAllOrder($id){
-        return Order::with('cart_info')->find($id);
-    }
+    // public static function getAllOrder($id){
+    //     return Order::with('cart_info')->find($id);
+    // }
+    
     public static function countActiveOrder(){
         $data=Order::count();
         if($data){
