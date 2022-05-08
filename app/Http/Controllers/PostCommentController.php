@@ -17,7 +17,7 @@ class PostCommentController extends Controller
      */
     public function index()
     {
-        $comments=PostComment::getAllComments();
+        $comments=PostComment::with('user_info')->paginate(10);
         return view('backend.comment.index')->with('comments',$comments);
     }
 

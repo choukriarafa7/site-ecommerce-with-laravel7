@@ -18,7 +18,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts=Post::getAllPost();
+        $posts= Post::with(['category','author'])->orderBy('id','DESC')->paginate(10);
         // return $posts;
         return view('backend.post.index')->with('posts',$posts);
     }

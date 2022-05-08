@@ -15,7 +15,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $category=Category::getAllCategory();
+        $category=Category::with('parent_info')->paginate(10);
         // return $category;
         return view('backend.category.index')->with('categories',$category);
     }
@@ -140,7 +140,7 @@ class CategoryController extends Controller
         
         if($status){
             if(count($child_cat_id)>0){
-                Category::shiftChild($child_cat_id);
+                Category::whereIn('id',$child_cat_id)->update(['is_parent'=>1]);
             }
             request()->session()->flash('success','Category successfully deleted');
         }
@@ -153,7 +153,7 @@ class CategoryController extends Controller
     public function getChildByParent(Request $request){
         // return $request->all();
         $category=Category::findOrFail($request->id);
-        $child_cat=Category::getChildByParentID($request->id);
+        $child_cat= Category::where('parent_id',$request->id)->orderBy('id','ASC')->pluck('title','id');
         // return $child_cat;
         if(count($child_cat)<=0){
             return response()->json(['status'=>false,'msg'=>'','data'=>null]);

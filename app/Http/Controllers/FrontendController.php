@@ -123,10 +123,16 @@ class FrontendController extends Controller
         else{
             $products=$products->where('status','active')->paginate(9);
         }
-        // Sort by name , price, category
-
+        
+        $categories = Category::with('subCategory')
+        ->where('is_parent',1)
+        ->where('status','active')
+        ->orderBy('title','ASC')
+        ->get();
       
-        return view('frontend.pages.product-grids')->with('products',$products)->with('recent_products',$recent_products);
+        return view('frontend.pages.product-grids')->with('products',$products)
+                    ->with('recent_products',$recent_products)
+                    ->with('categories',$categories);
     }
     public function productLists(){
         $products=Product::query();
@@ -253,7 +259,7 @@ class FrontendController extends Controller
 
     }
     public function productCat(Request $request){
-        $products=Category::getProductByCat($request->slug);
+        $products=Category::with('products')->where('slug',$request->slug)->first();
         // return $request->slug;
         $recent_products=Product::where('status','active')->orderBy('id','DESC')->limit(3)->get();
 
@@ -266,7 +272,7 @@ class FrontendController extends Controller
 
     }
     public function productSubCat(Request $request){
-        $products=Category::getProductBySubCat($request->sub_slug);
+        $products= Category::with('products')->where('slug',$request->slug)->first();
         // return $products;
         $recent_products=Product::where('status','active')->orderBy('id','DESC')->limit(3)->get();
 

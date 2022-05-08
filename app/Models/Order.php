@@ -2,6 +2,7 @@
 
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class Order extends Model
 {
@@ -10,24 +11,13 @@ class Order extends Model
     public function cart(){
         return $this->hasMany(Cart::class);
     }
-    // public static function getAllOrder($id){
-    //     return Order::with('cart_info')->find($id);
-    // }
-    
-    public static function countActiveOrder(){
-        $data=Order::count();
-        if($data){
-            return $data;
-        }
-        return 0;
-    }
    
     public function shipping(){
         return $this->belongsTo(Shipping::class);
     }
     public function user()
     {
-        return $this->belongsTo('App\User', 'user_id');
+        return $this->belongsTo(User::class);
     }
 
 }
